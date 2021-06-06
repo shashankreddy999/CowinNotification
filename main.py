@@ -1,31 +1,57 @@
-import requests
-from datetime import date
 import time
-# we import the Twilio client from the dependency we just installed
-import telegram_send
-telegram_send.send(messages=["Wow that was easy!"])
-
-# change the "from_" number to your Twilio number and the "to" number
-# to the phone number you signed up for Twilio with, or upgrade your
-# account to send SMS to any phone number
+import requests
+import beepy
+from datetime import date
+from twilio.rest import Client
 
 
-url="https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
+client = Client("AC31313e3579599d236102821a41cdfc20", "8fcef4fd1894de580134732fc4f98ca9")
+
+
+
+
+url="https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict"
 params={
-    "pincode":500010,
+    "district_id":581,
     "date" : date.today().strftime("%d-%m-%Y")
 
 }
 
+params2={
+    "district_id":596,
+    "date" : date.today().strftime("%d-%m-%Y")
 
+}
+
+beepy.beep(5)
+ind=0
 while True:
-    res= requests.get(url=url,params=params)
-    print("request sent")
-    data= res.json()
 
+
+    res= requests.get(url=url,params=params)
+    res2=requests.get(url=url,params=params2)
+
+    data= res.json()
+    data2 = res.json()
+    print("pinged ",ind)
+    ind+=1
     for i in data["centers"]:
         for j in i["sessions"]:
             if j['min_age_limit']==18 and j['vaccine']=='COVISHIELD' and j['available_capacity']>0 and j['available_capacity_dose1']>0:
-                print(j)
+                client.messages.create(to="+919849965690",
+                                       from_="+12107047917",
+                                       body=i["name"]+"\n"+i['address']+"\n"+str(j['available_capacity'])+"\n"+j["date"])
+                print("Vaccine Found")
+                print(i["name"] + "\n" + i['address'] + "\n" + str(j['available_capacity']) + "\n" + j["date"])
+                beepy.beep(5)
 
-    time.sleep(5)
+    for i in data2["centers"]:
+        for j in i["sessions"]:
+            if j['min_age_limit']==18 and j['vaccine']=='COVISHIELD' and j['available_capacity']>0 and j['available_capacity_dose1']>0:
+                client.messages.create(to="+919849965690",
+                                       from_="+12107047917",
+                                       body=i["name"]+"\n"+i['address']+"\n"+str(j['available_capacity'])+"\n"+j["date"])
+                print("Vaccine Found")
+                print(i["name"]+"\n"+i['address']+"\n"+str(j['available_capacity'])+"\n"+j["date"])
+                beepy.beep(5)
+    time.sleep(3)
