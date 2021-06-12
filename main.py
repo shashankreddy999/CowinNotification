@@ -5,7 +5,7 @@ from datetime import date
 from twilio.rest import Client
 
 
-client = Client("AC31313e3579599d236102821a41cdfc20", "8fcef4fd1894de580134732fc4f98ca9")
+client = Client("Account SID", "Auth_Token")
 
 
 
