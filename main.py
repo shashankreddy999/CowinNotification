@@ -11,12 +11,14 @@ client = Client("AC31313e3579599d236102821a41cdfc20", "8fcef4fd1894de580134732fc
 
 
 url="https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict"
+
+#district id for hyderabad
 params={
     "district_id":581,
     "date" : date.today().strftime("%d-%m-%Y")
 
 }
-
+#district id for medchal
 params2={
     "district_id":596,
     "date" : date.today().strftime("%d-%m-%Y")
